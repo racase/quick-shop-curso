@@ -1,1 +1,1 @@
-from app.models import cart, order, product, user  # noqa: F401
+from app.models import cart, order, product, review, user  # noqa: F401

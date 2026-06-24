@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.dependencies import get_db, require_admin
 from app.schemas.product import PaginatedProducts, ProductCreate, ProductResponse, ProductUpdate
-from app.services import product_service
+from app.services import product_service, review_service
 
 router = APIRouter()
 
@@ -27,7 +27,18 @@ async def get_product(product_id: uuid.UUID, db: AsyncSession = Depends(get_db))
     product = await product_service.get_active_by_id(db, str(product_id))
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
-    return product
+    rating_fields = await review_service.get_product_rating_fields(db, product.id)
+    return ProductResponse(
+        id=product.id,
+        name=product.name,
+        description=product.description,
+        price=product.price,
+        stock=product.stock,
+        image_url=product.image_url,
+        is_active=product.is_active,
+        average_rating=rating_fields["average_rating"],
+        rating_count=rating_fields["rating_count"],
+    )
 
 
 @router.post("/products", response_model=ProductResponse, status_code=201)

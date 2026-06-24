@@ -1,10 +1,13 @@
 from decimal import Decimal
+import random
 
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.security import hash_password
+from app.models.order import Order, OrderItem, OrderStatus
 from app.models.product import Product
+from app.models.review import Review
 from app.models.user import User, UserRole
 
 USERS = [
@@ -98,4 +101,62 @@ async def run_seed(db: AsyncSession) -> None:
                     image_url=image_url,
                 )
             )
+        await db.commit()
+
+    review_count = (await db.execute(select(func.count()).select_from(Review))).scalar()
+    if review_count == 0:
+        result = await db.execute(select(User).where(User.role == UserRole.client))
+        clients = result.scalars().all()
+        if not clients:
+            return
+
+        result = await db.execute(select(Product).where(Product.is_active.is_(True)))
+        products = result.scalars().all()
+        if not products:
+            return
+
+        result = await db.execute(
+            select(Order).where(Order.status == OrderStatus.delivered)
+        )
+        delivered_orders = result.scalars().all()
+
+        reviews_data = [
+            (0, 0, 5, "Excelente producto, supero mis expectativas"),
+            (0, 1, 4, "Muy buen raton, comodo y preciso"),
+            (0, 2, 5, "Teclado fantastico, los switches son perfectos"),
+            (0, 3, 4, "Hub util, todos los puertos funcionan bien"),
+            (0, 4, 5, "Monitor impresionante, colores increibles"),
+            (1, 0, 4, "Buena laptop, algo cara pero vale la pena"),
+            (1, 6, 5, "Auriculares excelentes, la cancelacion de ruido es genial"),
+            (1, 7, 4, "SSD rapido y confiable"),
+            (1, 8, 5, "Lampara perfecta para el escritorio"),
+            (1, 9, 4, "Soporte solido y bien diseñado"),
+            (1, 10, 5, "Altavoz con buen sonido para su tamaño"),
+            (0, 11, 4, "Tableta grafica buena para principiantes"),
+            (0, 12, 5, "Camara increible, calidad 4K real"),
+            (0, 13, 3, "Silla comoda pero el ensamblaje fue dificil"),
+            (1, 14, 5, "Kit muy util, mantiene todo ordenado"),
+            (1, 15, 4, "Router rapido, buena cobertura"),
+            (1, 16, 5, "Regleta muy practica, el app funciona bien"),
+            (0, 17, 4, "Funda protege bien el portatil"),
+            (0, 18, 5, "Reposamunecas muy comodo"),
+            (1, 19, 3, "Alfombrilla decente por el precio"),
+        ]
+
+        product_ids = [p.id for p in products]
+        client_ids = [c.id for c in clients]
+        order_ids = [o.id for o in delivered_orders] if delivered_orders else [None] * len(reviews_data)
+
+        for idx, (client_idx, product_idx, rating, comment) in enumerate(reviews_data):
+            if client_idx < len(client_ids) and product_idx < len(product_ids):
+                order_id = order_ids[idx % len(order_ids)] if order_ids else None
+                db.add(
+                    Review(
+                        user_id=client_ids[client_idx],
+                        product_id=product_ids[product_idx],
+                        order_id=order_id,
+                        rating=rating,
+                        comment=comment,
+                    )
+                )
         await db.commit()

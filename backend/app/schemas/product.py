@@ -57,6 +57,8 @@ class ProductResponse(BaseModel):
     stock: int
     image_url: str
     is_active: bool
+    average_rating: float = 0.0
+    rating_count: int = 0
 
     model_config = {"from_attributes": True}
 

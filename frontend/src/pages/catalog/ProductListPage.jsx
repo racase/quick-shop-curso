@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
 import { productService } from '../../services/productService'
 import { cartService } from '../../services/cartService'
+import { StarRating } from '../../components/ui/StarRating'
 
 export function ProductListPage() {
   const { user, token } = useAuth()
@@ -111,9 +112,19 @@ export function ProductListPage() {
                       >
                         {product.name}
                       </Link>
-                      <p className='font-display text-[28px] font-[500] leading-[1.28] text-ink mb-1'>
-                        ${product.price}
-                      </p>
+                      <div className='flex items-center gap-2 mb-1'>
+                        <p className='font-display text-[28px] font-[500] leading-[1.28] text-ink'>
+                          ${product.price}
+                        </p>
+                        {product.average_rating > 0 && (
+                          <div className='flex items-center gap-1'>
+                            <StarRating value={Math.round(product.average_rating)} readonly size='sm' />
+                            <span className='font-body text-xs text-shade-50'>
+                              ({product.rating_count})
+                            </span>
+                          </div>
+                        )}
+                      </div>
                       <p className='font-body text-xs font-[500] tracking-[0.28px] text-shade-50 mb-5'>
                         {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
                       </p>

@@ -19,11 +19,15 @@ The system SHALL return a paginated list of active products at GET /products wit
 - **THEN** it does not appear in the GET /products response
 
 ### Requirement: Public product detail
-The system SHALL return the full detail of a single active product at GET /products/{product_id} with no authentication required. If the product does not exist or is inactive, the system SHALL return 404.
+The system SHALL return the full detail of a single active product at GET /products/{product_id} with no authentication required. If the product does not exist or is inactive, the system SHALL return 404. The response SHALL include average_rating (numeric, 1 decimal) and rating_count (integer) fields representing the product's rating statistics.
 
 #### Scenario: Active product returned
 - **WHEN** a GET request is sent to /products/{product_id} for a product with is_active=true
-- **THEN** the system returns HTTP 200 with id, name, description, price, stock, image_url, is_active
+- **THEN** the system returns HTTP 200 with id, name, description, price, stock, image_url, is_active, average_rating, and rating_count
+
+#### Scenario: Product with no reviews
+- **WHEN** a product has no reviews
+- **THEN** average_rating is 0.0 and rating_count is 0
 
 #### Scenario: Inactive product returns 404
 - **WHEN** a GET request is sent to /products/{product_id} for a product with is_active=false
@@ -92,11 +96,23 @@ The system SHALL enforce a CHECK constraint on the products table: stock >= 0. A
 - **THEN** the system returns HTTP 422
 
 ### Requirement: Product catalog page (frontend)
-The React application SHALL provide a public product catalog at / (index route). It SHALL display products in a responsive grid with image, name, price, and a stock indicator. It SHALL include a search bar and pagination controls. The "Add to cart" button SHALL be disabled if stock=0 or if the user is not an authenticated client.
+The React application SHALL provide a public product catalog at / (index route). It SHALL display products in a responsive grid with image, name, price, and a stock indicator. It SHALL include a search bar and pagination controls. The "Add to cart" button SHALL be disabled if stock=0 or if the user is not an authenticated client. Each product card SHALL display the average rating as stars (1-5) and the total number of reviews. If a product has no reviews, no stars SHALL be displayed.
 
 #### Scenario: Products displayed in grid
 - **WHEN** any visitor navigates to /
 - **THEN** the page calls GET /products and renders product cards in a responsive grid
+
+#### Scenario: Product card shows rating stars
+- **WHEN** a product has average_rating > 0
+- **THEN** the product card displays star icons representing the rating (e.g., 4.2 shows 4 full stars and 1 partial star)
+
+#### Scenario: Product card shows review count
+- **WHEN** a product has rating_count > 0
+- **THEN** the product card displays the number of reviews in parentheses (e.g., "(15)")
+
+#### Scenario: Product with no reviews
+- **WHEN** a product has rating_count = 0
+- **THEN** no stars or review count are displayed
 
 #### Scenario: Add to cart disabled for unauthenticated user
 - **WHEN** the visitor is not logged in
