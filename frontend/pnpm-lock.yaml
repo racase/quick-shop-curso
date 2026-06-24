@@ -18,6 +18,9 @@ importers:
         specifier: ^6.28.0
         version: 6.30.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     devDependencies:
+      '@playwright/test':
+        specifier: ^1.49.0
+        version: 1.61.0
       '@tailwindcss/vite':
         specifier: ^4.1.0
         version: 4.3.1(vite@5.4.21(lightningcss@1.32.0))
@@ -269,6 +272,11 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha1-2xXWeByTHzolGj2sOVAcmKYIL9A=}
+
+  '@playwright/test@1.61.0':
+    resolution: {integrity: sha1-3MPUPlgaqymF1wQTMJ2JNQ6YCtg=}
+    engines: {node: '>=18'}
+    hasBin: true
 
   '@remix-run/router@1.23.2':
     resolution: {integrity: sha1-FWxLSBwL7iKhn3kkcopnEg3gaXE=}
@@ -575,6 +583,11 @@ packages:
     resolution: {integrity: sha1-ARo/aYVroYnf+n3I/M6Z0qh5A+U=}
     engines: {node: '>=6'}
 
+  fsevents@2.3.2:
+    resolution: {integrity: sha1-ilJveLj99GI7cJ4Ll1xSwkwC/Ro=}
+    engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
+    os: [darwin]
+
   fsevents@2.3.3:
     resolution: {integrity: sha1-ysZAd4XQNnWipeGlMFxpezR9kNY=}
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
@@ -702,6 +715,16 @@ packages:
 
   picocolors@1.1.1:
     resolution: {integrity: sha1-PTIa8+q5ObCDyPkpodEs2oHCa2s=}
+
+  playwright-core@1.61.0:
+    resolution: {integrity: sha1-yvgHiyo5zXc43HXsEcs7R/OFw/A=}
+    engines: {node: '>=18'}
+    hasBin: true
+
+  playwright@1.61.0:
+    resolution: {integrity: sha1-cILfPfCP+oKxFCDqX66EpAvRbj8=}
+    engines: {node: '>=18'}
+    hasBin: true
 
   postcss@8.5.15:
     resolution: {integrity: sha1-0er2d6Mk6ewCGW2i0/7PSguac1w=}
@@ -998,6 +1021,10 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
+  '@playwright/test@1.61.0':
+    dependencies:
+      playwright: 1.61.0
+
   '@remix-run/router@1.23.2': {}
 
   '@rolldown/pluginutils@1.0.0-beta.27': {}
@@ -1235,6 +1262,9 @@ snapshots:
 
   escalade@3.2.0: {}
 
+  fsevents@2.3.2:
+    optional: true
+
   fsevents@2.3.3:
     optional: true
 
@@ -1318,6 +1348,14 @@ snapshots:
   node-releases@2.0.47: {}
 
   picocolors@1.1.1: {}
+
+  playwright-core@1.61.0: {}
+
+  playwright@1.61.0:
+    dependencies:
+      playwright-core: 1.61.0
+    optionalDependencies:
+      fsevents: 2.3.2
 
   postcss@8.5.15:
     dependencies:
