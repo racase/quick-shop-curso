@@ -54,6 +54,21 @@ Pedidos:
 - CORS configurado en el backend para aceptar el origen del frontend
 - Variables sensibles en archivos .env, con .env.example versionado y .env en .gitignore
 - Ningun secreto, password o URL hardcodeado en el codigo fuente
+- Frontend: Tendra header y un layout donde se muestren los componentes/layouts de cada pagina. Responsive
+
+## Decisiones tecnicas
+
+- **Backend**:
+  - **Sin `passlib`**: Usar `bcrypt` directamente (`bcrypt.hashpw`/`checkpw`) por incompatibilidades.
+  - **Email Validator**: Añadir `email-validator>=2.1.0` explícitamente para Pydantic `EmailStr`.
+- **Frontend**:
+  - **Sin PostCSS/Autoprefixer externos**: Configurar PostCSS inline en `vite.config.js` solo con `tailwindcss()` para evitar fallos de regex en Windows.
+- **Docker & pnpm**:
+  - **Node.js**: Usar `node:22-alpine` en frontend (pnpm 11 requiere Node >= 22.13).
+  - **Instalación**: Copiar `pnpm-workspace.yaml` junto a lock/package antes de `pnpm install` en el Dockerfile.
+  - **Builds no interactivos**: Declarar `allowBuilds` en `pnpm-workspace.yaml` (evita prompts de aprobación en agentes/CI).
+  - **`.dockerignore` obligatorio**: Excluir `node_modules` y directorios temporales para evitar errores de symlinks en Windows.
+
 
 ## Tareas
 
