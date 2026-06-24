@@ -21,9 +21,8 @@ Usuarios:
 
 Catalogo:
 
-- 20 productos creados por seed
+- 20 productos creados por seed en base al fichero ubicado en docs/products-images.json
 - Campos: nombre, descripcion, precio (Decimal con 2 decimales, > 0), stock (entero >= 0), URL de imagen, flag is_active
-- Imagenes: usar picsum.photos con seed estable, por ejemplo https://picsum.photos/seed/quickshop-1/400/300
 - Producto con stock 0: visible pero deshabilitado para agregar al carrito
 
 Carrito:
@@ -50,7 +49,7 @@ Pedidos:
 - Seed automatico e idempotente al arrancar si la base de datos esta vacia, que cree:
     - 1 administrador: [admin@quickshop.com](mailto:admin@quickshop.com) / Admin1234!
     - 2 clientes: [cliente1@quickshop.com](mailto:cliente1@quickshop.com) / Cliente1234! y [cliente2@quickshop.com](mailto:cliente2@quickshop.com) / Cliente1234!
-    - 20 productos con datos realistas e imagenes de picsum.photos
+    - 20 productos creados en base al fichero ubicado en docs/products-images.json
 - CORS configurado en el backend para aceptar el origen del frontend
 - Variables sensibles en archivos .env, con .env.example versionado y .env en .gitignore
 - Ningun secreto, password o URL hardcodeado en el codigo fuente
