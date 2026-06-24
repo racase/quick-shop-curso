@@ -27,6 +27,22 @@ export function Header() {
 
           {user ? (
             <>
+              {user.role === 'client' && (
+                <>
+                  <Link
+                    to='/cart'
+                    className='text-on-primary/60 hover:text-on-primary transition-colors'
+                  >
+                    Cart
+                  </Link>
+                  <Link
+                    to='/orders'
+                    className='text-on-primary/60 hover:text-on-primary transition-colors'
+                  >
+                    Orders
+                  </Link>
+                </>
+              )}
               <Link
                 to='/profile'
                 className='text-on-primary/60 hover:text-on-primary transition-colors'
@@ -40,6 +56,12 @@ export function Header() {
                     className='text-on-primary/60 hover:text-on-primary transition-colors'
                   >
                     Products
+                  </Link>
+                  <Link
+                    to='/admin/orders'
+                    className='text-on-primary/60 hover:text-on-primary transition-colors'
+                  >
+                    Orders
                   </Link>
                   <Link
                     to='/admin/users'

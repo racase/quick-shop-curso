@@ -41,4 +41,8 @@ async def require_admin(current_user=Depends(get_current_user)):
 
 
 async def require_client(current_user=Depends(get_current_user)):
+    from app.models.user import UserRole
+
+    if current_user.role != UserRole.client:
+        raise HTTPException(status_code=403, detail="Client access required")
     return current_user

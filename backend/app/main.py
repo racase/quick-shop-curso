@@ -29,9 +29,13 @@ app.add_middleware(
 )
 
 from app.api.v1.auth import router as auth_router
+from app.api.v1.cart import router as cart_router
+from app.api.v1.orders import router as orders_router
 from app.api.v1.products import router as products_router
 from app.api.v1.users import router as users_router
 
 app.include_router(auth_router, prefix="/auth", tags=["auth"])
 app.include_router(users_router, prefix="/users", tags=["users"])
 app.include_router(products_router, tags=["products"])
+app.include_router(cart_router, tags=["cart"])
+app.include_router(orders_router, tags=["orders"])

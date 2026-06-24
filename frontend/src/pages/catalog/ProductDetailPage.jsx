@@ -2,14 +2,17 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
 import { productService } from '../../services/productService'
+import { cartService } from '../../services/cartService'
 
 export function ProductDetailPage() {
   const { id } = useParams()
-  const { user } = useAuth()
+  const { user, token } = useAuth()
   const navigate = useNavigate()
   const [product, setProduct] = useState(null)
   const [qty, setQty] = useState(1)
   const [loading, setLoading] = useState(true)
+  const [adding, setAdding] = useState(false)
+  const [feedback, setFeedback] = useState('')
 
   useEffect(() => {
     productService.getProduct(id)
@@ -17,6 +20,19 @@ export function ProductDetailPage() {
       .catch(() => navigate('/404'))
       .finally(() => setLoading(false))
   }, [id, navigate])
+
+  const handleAddToCart = async () => {
+    setAdding(true)
+    setFeedback('')
+    try {
+      await cartService.addItem(product.id, qty, token)
+      setFeedback('Added to cart')
+    } catch (err) {
+      setFeedback(err.message)
+    } finally {
+      setAdding(false)
+    }
+  }
 
   if (loading) {
     return (
@@ -77,11 +93,16 @@ export function ProductDetailPage() {
               </div>
             )}
 
+            {feedback && (
+              <p className='font-body text-sm text-shade-60 mb-4'>{feedback}</p>
+            )}
+
             <button
-              disabled={!canAddToCart}
+              disabled={!canAddToCart || adding}
+              onClick={handleAddToCart}
               className='w-full bg-ink text-on-primary font-body text-base font-[420] py-3.5 rounded-pill hover:bg-shade-70 disabled:opacity-40 disabled:cursor-not-allowed transition-colors'
             >
-              {product.stock === 0 ? 'Out of stock' : 'Add to cart'}
+              {adding ? 'Adding...' : product.stock === 0 ? 'Out of stock' : 'Add to cart'}
             </button>
 
             {!user && (

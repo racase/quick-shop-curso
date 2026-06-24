@@ -2,14 +2,17 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
 import { productService } from '../../services/productService'
+import { cartService } from '../../services/cartService'
 
 export function ProductListPage() {
-  const { user } = useAuth()
+  const { user, token } = useAuth()
   const [data, setData] = useState({ items: [], total: 0, page: 1, size: 20 })
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState('')
   const [query, setQuery] = useState('')
   const [loading, setLoading] = useState(true)
+  const [addingId, setAddingId] = useState(null)
+  const [feedback, setFeedback] = useState('')
 
   useEffect(() => {
     setLoading(true)
@@ -17,6 +20,19 @@ export function ProductListPage() {
       .then(setData)
       .finally(() => setLoading(false))
   }, [page, query])
+
+  const handleAddToCart = async (productId) => {
+    setAddingId(productId)
+    setFeedback('')
+    try {
+      await cartService.addItem(productId, 1, token)
+      setFeedback('Added to cart')
+    } catch (err) {
+      setFeedback(err.message)
+    } finally {
+      setAddingId(null)
+    }
+  }
 
   const totalPages = Math.ceil(data.total / data.size)
   const canAddToCart = user && user.role === 'client'
@@ -70,6 +86,11 @@ export function ProductListPage() {
             </div>
           ) : (
             <>
+              {feedback && (
+                <div className='mb-6 bg-aloe-10 text-ink font-body text-sm font-[500] px-4 py-3 rounded-md text-center'>
+                  {feedback}
+                </div>
+              )}
               <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
                 {data.items.map((product) => (
                   <div
@@ -97,10 +118,11 @@ export function ProductListPage() {
                         {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
                       </p>
                       <button
-                        disabled={!canAddToCart || product.stock === 0}
+                        disabled={!canAddToCart || product.stock === 0 || addingId === product.id}
+                        onClick={() => handleAddToCart(product.id)}
                         className='w-full bg-ink text-on-primary font-body text-sm font-[420] py-2.5 rounded-pill hover:bg-shade-70 disabled:opacity-40 disabled:cursor-not-allowed transition-colors'
                       >
-                        Add to cart
+                        {addingId === product.id ? 'Adding...' : 'Add to cart'}
                       </button>
                     </div>
                   </div>
