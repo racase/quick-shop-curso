@@ -1,4 +1,5 @@
 {
+  "$schema": "https://opencode.ai/config.json",
   "command": {
     "git-ship": {
       "description": "Commit with Conventional Commits, push to remote, and optionally open a PR",
