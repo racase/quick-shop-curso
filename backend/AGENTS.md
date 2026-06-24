@@ -312,4 +312,9 @@ Configuracion en pyproject.toml:
 ```toml
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
+
+## Convenciones de Idioma
+- **El agente debe comunicarse e interactuar siempre en castellano (español).**
+- El código fuente, logs y comentarios deben estar en inglés.
+
 ```

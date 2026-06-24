@@ -11,3 +11,7 @@ Para instrucciones especificas del backend consulta @backend/AGENTS.md.
 Para instrucciones especificas del frontend consulta @frontend/AGENTS.md.
 
 Para las especificaciones detalladas de cada modulo consulta los archivos en docs/specs-prds/.
+
+## Regla de Idioma del Agente
+- **El agente debe comunicarse e interactuar siempre en castellano (español).**
+

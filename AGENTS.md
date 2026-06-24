@@ -127,6 +127,7 @@ No comenzar el frontend de un modulo hasta que el backend correspondiente este f
 ### Idioma
 
 - Documentacion (CLAUDE.md, AGENTS.md, specs, README): castellano.
+- Comunicación e interacción del agente con el usuario: castellano (español).
 - Codigo fuente (variables, funciones, clases, comentarios inline): ingles.
 - Mensajes de commit: ingles.
 - Mensajes de error devueltos por la API: ingles.

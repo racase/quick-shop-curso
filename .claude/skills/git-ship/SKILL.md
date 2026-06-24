@@ -1,84 +1,84 @@
 ---
 name: git-ship
-description: Commit staged/unstaged changes using Conventional Commits, push to remote, then optionally open a PR. Use when the user wants to commit and push their current work in one shot.
+description: Hace commit de los cambios con Conventional Commits, push al remoto y opcionalmente abre una PR. Úsalo cuando el usuario quiera subir su trabajo actual de una sola vez.
 ---
 
-Commit the current changes with a Conventional Commit message, push to remote, and optionally create a PR.
+Haz commit de los cambios actuales con un mensaje Conventional Commit, push al remoto y opcionalmente crea una PR.
 
 ---
 
-**Steps**
+**Pasos**
 
-1. **Check working tree state**
+1. **Revisar el estado del repositorio**
 
-   Run these in parallel:
-   - `git status` — identify staged/unstaged/untracked files
-   - `git diff HEAD` — full diff of all changes (staged + unstaged)
-   - `git log --oneline -5` — recent commits to match message style
-   - `git branch --show-current` — current branch name
+   Ejecuta en paralelo:
+   - `git status` — identificar ficheros modificados, staged y sin seguimiento
+   - `git diff HEAD` — diff completo de todos los cambios (staged + unstaged)
+   - `git log --oneline -5` — commits recientes para seguir el estilo del proyecto
+   - `git branch --show-current` — nombre de la rama actual
 
-2. **Abort if nothing to commit**
+2. **Abortar si no hay nada que commitear**
 
-   If `git status` shows a clean working tree, tell the user there is nothing to commit and stop.
+   Si `git status` muestra el árbol de trabajo limpio, informa al usuario y para.
 
-3. **Draft the Conventional Commit message**
+3. **Redactar el mensaje de Conventional Commit**
 
-   Analyse the diff and determine:
+   Analiza el diff y determina:
    - **type**: `feat` | `fix` | `refactor` | `test` | `docs` | `chore` | `style` | `perf` | `ci` | `build` | `revert`
-   - **scope** (optional): the module/area affected (e.g. `auth`, `products`, `frontend`, `docker`)
-   - **subject**: imperative, present tense, ≤72 chars, no trailing period
-   - **body** (optional): 1-3 bullet lines explaining *why*, only for non-trivial changes
-   - **breaking change** (optional): add `BREAKING CHANGE:` footer if the change breaks the public API
+   - **scope** (opcional): módulo o área afectada (ej. `auth`, `products`, `frontend`, `docker`)
+   - **subject**: modo imperativo, tiempo presente, ≤72 caracteres, sin punto final
+   - **cuerpo** (opcional): 1-3 líneas explicando el *por qué*, solo para cambios no triviales
+   - **breaking change** (opcional): añade footer `BREAKING CHANGE:` si el cambio rompe la API pública
 
-   Format:
+   Formato:
    ```
    <type>(<scope>): <subject>
 
-   <body>
+   <cuerpo>
    ```
 
-   Show the proposed message to the user before committing.
+   Muestra el mensaje propuesto al usuario antes de commitear.
 
-4. **Stage all changes**
+4. **Añadir los cambios al stage**
 
-   Run `git add -A` to stage everything.
+   Ejecuta `git add -A` para añadir todo.
 
-   > If the user passed specific file paths as arguments, stage only those files instead.
+   > Si el usuario pasó rutas de ficheros concretos como argumentos, añade solo esos ficheros.
 
-5. **Commit**
+5. **Crear el commit**
 
-   Create the commit using the drafted message via heredoc:
+   Crea el commit con el mensaje redactado usando heredoc:
    ```
    git commit -m "$(cat <<'EOF'
-   <message>
+   <mensaje>
    EOF
    )"
    ```
 
-   Do NOT skip hooks (`--no-verify`). If a pre-commit hook fails, report the error and stop.
+   No omitas los hooks (`--no-verify`). Si un pre-commit hook falla, reporta el error y para.
 
-6. **Push**
+6. **Push al remoto**
 
-   Run `git push`. If there is no upstream yet, run `git push -u origin <branch>`.
+   Ejecuta `git push`. Si no hay upstream configurado, ejecuta `git push -u origin <rama>`.
 
-   If the push is rejected due to diverged history, report the conflict and stop — do not force-push without explicit user confirmation.
+   Si el push es rechazado porque el historial remoto ha divergido, reporta el conflicto y para — no hagas force-push sin confirmación explícita del usuario.
 
-7. **Ask about a Pull Request**
+7. **Preguntar sobre la Pull Request**
 
-   Use the **AskUserQuestion tool** with a single question:
+   Usa la herramienta **AskUserQuestion** con una sola pregunta:
 
    > "¿Quieres abrir una Pull Request?"
 
-   Options:
-   - `Sí → main` — create PR targeting `main`
-   - `Sí → otra rama` — ask which target branch, then create the PR
-   - `No` — finish here
+   Opciones:
+   - `Sí → main` — crear PR apuntando a `main`
+   - `Sí → otra rama` — preguntar a qué rama base y crear la PR
+   - `No` — terminar aquí
 
-8. **Create the PR (if requested)**
+8. **Crear la PR (si se solicita)**
 
-   Use `gh pr create` with:
-   - Title matching the commit subject
-   - Body with a bullet summary of the changes (and the commit body if present)
-   - `--base <target-branch>`
+   Usa `gh pr create` con:
+   - Título igual al subject del commit
+   - Cuerpo con un resumen en bullets de los cambios (y el cuerpo del commit si existe)
+   - `--base <rama-base>`
 
-   Return the PR URL to the user.
+   Devuelve la URL de la PR al usuario.
