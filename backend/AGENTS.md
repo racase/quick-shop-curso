@@ -258,8 +258,7 @@ Credenciales del seed:
 - cliente1@quickshop.com / Cliente1234!
 - cliente2@quickshop.com / Cliente1234!
 
-Los 20 productos usan imagenes de picsum.photos con seeds estables:
-https://picsum.photos/seed/quickshop-{1..20}/400/300
+Los 20 productos usan imagenes de Unsplash con IDs verificados, almacenadas en la lista UNSPLASH_IMAGES del seed.
 
 ## Email validation
 
