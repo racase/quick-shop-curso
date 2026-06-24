@@ -11,45 +11,62 @@ export function Header() {
   }
 
   return (
-    <header className='bg-white border-b border-gray-200'>
-      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between'>
-        <Link to='/' className='text-xl font-bold text-indigo-600'>
+    <header className='bg-canvas-night text-on-primary border-b border-hairline-dark'>
+      <div className='max-w-[1440px] mx-auto px-6 h-16 flex items-center justify-between'>
+        <Link
+          to='/'
+          className='font-display text-xl font-medium tracking-wide text-on-primary hover:text-on-primary/80 transition-colors'
+        >
           QuickShop
         </Link>
-        <nav className='flex items-center gap-4 text-sm'>
-          <Link to='/' className='text-gray-600 hover:text-gray-900'>
+
+        <nav className='flex items-center gap-6 font-body text-sm'>
+          <Link to='/' className='text-on-primary/60 hover:text-on-primary transition-colors'>
             Catalog
           </Link>
+
           {user ? (
             <>
-              <Link to='/profile' className='text-gray-600 hover:text-gray-900'>
+              <Link
+                to='/profile'
+                className='text-on-primary/60 hover:text-on-primary transition-colors'
+              >
                 {user.full_name}
               </Link>
               {user.role === 'admin' && (
                 <>
-                  <Link to='/admin/products' className='text-gray-600 hover:text-gray-900'>
+                  <Link
+                    to='/admin/products'
+                    className='text-on-primary/60 hover:text-on-primary transition-colors'
+                  >
                     Products
                   </Link>
-                  <Link to='/admin/users' className='text-gray-600 hover:text-gray-900'>
+                  <Link
+                    to='/admin/users'
+                    className='text-on-primary/60 hover:text-on-primary transition-colors'
+                  >
                     Users
                   </Link>
                 </>
               )}
               <button
                 onClick={handleLogout}
-                className='text-gray-600 hover:text-gray-900'
+                className='border border-on-primary/30 text-on-primary px-6 py-2 rounded-pill text-sm hover:border-on-primary/70 transition-colors'
               >
                 Logout
               </button>
             </>
           ) : (
             <>
-              <Link to='/login' className='text-gray-600 hover:text-gray-900'>
+              <Link
+                to='/login'
+                className='text-on-primary/60 hover:text-on-primary transition-colors'
+              >
                 Login
               </Link>
               <Link
                 to='/register'
-                className='bg-indigo-600 text-white px-3 py-1.5 rounded hover:bg-indigo-700'
+                className='border border-on-primary/30 text-on-primary px-6 py-2 rounded-pill text-sm hover:border-on-primary/70 transition-colors'
               >
                 Register
               </Link>

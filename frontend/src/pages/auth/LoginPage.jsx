@@ -17,52 +17,72 @@ export function LoginPage() {
     try {
       await login(email, password)
       navigate('/')
-    } catch (err) {
-      setError('Credenciales incorrectas')
+    } catch {
+      setError('Incorrect credentials. Please try again.')
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className='max-w-md mx-auto mt-16'>
-      <h1 className='text-2xl font-bold text-gray-900 mb-6'>Sign in</h1>
-      <form onSubmit={handleSubmit} className='space-y-4'>
-        <div>
-          <label className='block text-sm font-medium text-gray-700 mb-1'>Email</label>
-          <input
-            type='email'
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className='w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500'
-          />
-        </div>
-        <div>
-          <label className='block text-sm font-medium text-gray-700 mb-1'>Password</label>
-          <input
-            type='password'
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className='w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500'
-          />
-        </div>
-        {error && <p className='text-red-600 text-sm'>{error}</p>}
-        <button
-          type='submit'
-          disabled={loading}
-          className='w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 disabled:opacity-50'
-        >
-          {loading ? 'Signing in...' : 'Sign in'}
-        </button>
-      </form>
-      <p className='mt-4 text-sm text-gray-600'>
-        No account?{' '}
-        <Link to='/register' className='text-indigo-600 hover:underline'>
-          Register
-        </Link>
-      </p>
+    <div className='flex-1 bg-canvas-cream flex items-center justify-center px-4 py-16'>
+      <div className='w-full max-w-md bg-canvas-light rounded-lg p-8 shadow-[0_8px_8px_rgba(0,0,0,0.08),0_4px_4px_rgba(0,0,0,0.08),0_2px_2px_rgba(0,0,0,0.08),0_0_0_1px_rgba(0,0,0,0.08)]'>
+        <span className='font-body text-xs font-[400] tracking-[0.72px] uppercase text-shade-50 mb-3 block'>
+          Account
+        </span>
+        <h1 className='font-display text-[48px] font-[330] leading-[1.14] text-ink mb-8'>
+          Sign in
+        </h1>
+
+        <form onSubmit={handleSubmit} className='space-y-5'>
+          <div>
+            <label className='block font-body text-sm font-[500] text-shade-60 mb-1.5 tracking-[0.28px]'>
+              Email
+            </label>
+            <input
+              type='email'
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder='you@example.com'
+              className='w-full bg-canvas-light border border-hairline-light rounded-md px-3 py-[10px] font-body text-base font-[420] text-ink placeholder-shade-40 focus:outline-none focus:border-shade-50 transition-colors'
+            />
+          </div>
+          <div>
+            <label className='block font-body text-sm font-[500] text-shade-60 mb-1.5 tracking-[0.28px]'>
+              Password
+            </label>
+            <input
+              type='password'
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className='w-full bg-canvas-light border border-hairline-light rounded-md px-3 py-[10px] font-body text-base font-[420] text-ink placeholder-shade-40 focus:outline-none focus:border-shade-50 transition-colors'
+            />
+          </div>
+
+          {error && (
+            <p className='font-body text-sm text-red-600 bg-red-50 px-3 py-2 rounded-md'>
+              {error}
+            </p>
+          )}
+
+          <button
+            type='submit'
+            disabled={loading}
+            className='w-full bg-ink text-on-primary font-body text-base font-[420] py-3 rounded-pill hover:bg-shade-70 disabled:opacity-50 transition-colors mt-2'
+          >
+            {loading ? 'Signing in…' : 'Sign in'}
+          </button>
+        </form>
+
+        <p className='mt-6 font-body text-sm text-shade-50'>
+          No account?{' '}
+          <Link to='/register' className='text-ink font-[500] underline underline-offset-2 hover:text-shade-70'>
+            Create one
+          </Link>
+        </p>
+      </div>
     </div>
   )
 }

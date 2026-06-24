@@ -34,45 +34,83 @@ export function UserProfilePage() {
     }
   }
 
+  const inputClass =
+    'w-full bg-canvas-light border border-hairline-light rounded-md px-3 py-[10px] font-body text-base font-[420] text-ink placeholder-shade-40 focus:outline-none focus:border-shade-50 transition-colors'
+  const labelClass =
+    'block font-body text-sm font-[500] text-shade-60 mb-1.5 tracking-[0.28px]'
+
   return (
-    <div className='max-w-lg mx-auto'>
-      <h1 className='text-2xl font-bold text-gray-900 mb-6'>My Profile</h1>
-      <div className='mb-6 text-sm text-gray-600'>
-        <p><span className='font-medium'>Email:</span> {user?.email}</p>
-        <p><span className='font-medium'>Role:</span> {user?.role}</p>
+    <div className='flex-1 bg-canvas-cream px-4 py-16'>
+      <div className='max-w-[560px] mx-auto'>
+        <span className='font-body text-xs font-[400] tracking-[0.72px] uppercase text-shade-50 mb-3 block'>
+          Account
+        </span>
+        <h1 className='font-display text-[48px] font-[330] leading-[1.14] text-ink mb-10'>
+          My profile
+        </h1>
+
+        {/* Read-only info */}
+        <div className='bg-canvas-light rounded-lg border border-hairline-light p-6 mb-8 shadow-[0_0_0_1px_rgba(0,0,0,0.06)]'>
+          <div className='grid grid-cols-2 gap-y-3'>
+            <span className='font-body text-sm font-[500] text-shade-60 tracking-[0.28px]'>Email</span>
+            <span className='font-body text-sm font-[420] text-ink'>{user?.email}</span>
+            <span className='font-body text-sm font-[500] text-shade-60 tracking-[0.28px]'>Role</span>
+            <span className='inline-flex'>
+              <span className='bg-aloe-10 text-ink font-body text-xs font-[400] tracking-[0.72px] uppercase px-3 py-0.5 rounded-pill capitalize'>
+                {user?.role}
+              </span>
+            </span>
+          </div>
+        </div>
+
+        {/* Editable form */}
+        <div className='bg-canvas-light rounded-lg border border-hairline-light p-6 shadow-[0_8px_8px_rgba(0,0,0,0.06),0_4px_4px_rgba(0,0,0,0.06),0_2px_2px_rgba(0,0,0,0.06),0_0_0_1px_rgba(0,0,0,0.06)]'>
+          <h2 className='font-display text-[20px] font-[500] leading-[1.4] text-ink mb-6'>
+            Edit details
+          </h2>
+          <form onSubmit={handleSubmit} className='space-y-5'>
+            <div>
+              <label className={labelClass}>Full name</label>
+              <input
+                name='full_name'
+                value={form.full_name}
+                onChange={handleChange}
+                className={inputClass}
+              />
+            </div>
+            <div>
+              <label className={labelClass}>New password</label>
+              <input
+                type='password'
+                name='password'
+                value={form.password}
+                onChange={handleChange}
+                placeholder='Leave blank to keep current'
+                className={inputClass}
+              />
+            </div>
+
+            {message && (
+              <p className='font-body text-sm text-green-700 bg-green-50 px-3 py-2 rounded-md'>
+                {message}
+              </p>
+            )}
+            {error && (
+              <p className='font-body text-sm text-red-600 bg-red-50 px-3 py-2 rounded-md'>
+                {error}
+              </p>
+            )}
+
+            <button
+              type='submit'
+              disabled={loading}
+              className='bg-ink text-on-primary font-body text-base font-[420] px-8 py-3 rounded-pill hover:bg-shade-70 disabled:opacity-50 transition-colors'
+            >
+              {loading ? 'Saving…' : 'Save changes'}
+            </button>
+          </form>
+        </div>
       </div>
-      <form onSubmit={handleSubmit} className='space-y-4'>
-        <div>
-          <label className='block text-sm font-medium text-gray-700 mb-1'>Full name</label>
-          <input
-            name='full_name'
-            value={form.full_name}
-            onChange={handleChange}
-            className='w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500'
-          />
-        </div>
-        <div>
-          <label className='block text-sm font-medium text-gray-700 mb-1'>
-            New password (leave blank to keep current)
-          </label>
-          <input
-            type='password'
-            name='password'
-            value={form.password}
-            onChange={handleChange}
-            className='w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500'
-          />
-        </div>
-        {message && <p className='text-green-600 text-sm'>{message}</p>}
-        {error && <p className='text-red-600 text-sm'>{error}</p>}
-        <button
-          type='submit'
-          disabled={loading}
-          className='bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 disabled:opacity-50'
-        >
-          {loading ? 'Saving...' : 'Save changes'}
-        </button>
-      </form>
     </div>
   )
 }

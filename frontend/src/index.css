@@ -1,1 +1,60 @@
 @import "tailwindcss";
+
+@theme {
+  /* Canvas */
+  --color-canvas-night: #000000;
+  --color-canvas-night-elevated: #0a0a0a;
+  --color-canvas-light: #ffffff;
+  --color-canvas-cream: #fbfbf5;
+  --color-surface-elevated-dark: #1e2c31;
+
+  /* Text */
+  --color-ink: #000000;
+  --color-on-primary: #ffffff;
+
+  /* Accent */
+  --color-aloe-10: #c1fbd4;
+  --color-pistachio-10: #d4f9e0;
+
+  /* Shade ladder */
+  --color-shade-30: #d4d4d8;
+  --color-shade-40: #a1a1aa;
+  --color-shade-50: #71717a;
+  --color-shade-60: #52525b;
+  --color-shade-70: #3f3f46;
+
+  /* Hairlines */
+  --color-hairline-light: #e4e4e7;
+  --color-hairline-dark: #1e2c31;
+
+  /* Link tones (footer / tertiary) */
+  --color-link-cool-1: #9dabad;
+
+  /* Font families */
+  --font-display: "Neue Haas Grotesk Display", Helvetica, Arial, sans-serif;
+  --font-body: "Inter Variable", Inter, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Border radius */
+  --radius-xs: 4px;
+  --radius-sm: 5px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 20px;
+  --radius-pill: 9999px;
+}
+
+/* ── Global ─────────────────────────────────────────────── */
+html {
+  font-feature-settings: "ss03";
+}
+
+body {
+  font-family: "Inter Variable", Inter, Helvetica, Arial, sans-serif;
+  font-weight: 420;
+  color: #000000;
+  background-color: #ffffff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "ss03";
+}

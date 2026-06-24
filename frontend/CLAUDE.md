@@ -6,6 +6,8 @@ AVISO CRITICO (pnpm 11): Las aprobaciones de build scripts se guardan en pnpm-wo
 
 Para convenciones de componentes, configuracion de Tailwind, estructura de rutas, manejo de autenticacion y guia completa de pnpm consulta @AGENTS.md.
 
+Para el sistema de diseño visual (colores, tipografia, botones, tarjetas, espaciado, breakpoints y los dos tracks de canvas) consulta **@DESIGN.md**. Este fichero es la fuente de verdad para toda decision de UI/UX. Cualquier componente nuevo o modificado debe respetar las reglas definidas ahi.
+
 ## Regla de Idioma del Agente
 - **El agente debe comunicarse e interactuar siempre en castellano (español).**
 

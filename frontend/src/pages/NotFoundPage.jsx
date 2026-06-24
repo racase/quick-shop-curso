@@ -2,10 +2,20 @@ import { Link } from 'react-router-dom'
 
 export function NotFoundPage() {
   return (
-    <div className='text-center mt-24'>
-      <h1 className='text-6xl font-bold text-gray-300'>404</h1>
-      <p className='text-xl text-gray-600 mt-4'>Page not found</p>
-      <Link to='/' className='mt-6 inline-block text-indigo-600 hover:underline'>
+    <div className='flex-1 bg-canvas-night text-on-primary flex flex-col items-center justify-center px-6 py-32'>
+      <span className='font-body text-xs font-[400] tracking-[0.72px] uppercase text-shade-40 mb-6'>
+        Error
+      </span>
+      <h1 className='font-display text-[96px] md:text-[120px] font-[330] leading-none tracking-[2.4px] text-on-primary mb-6'>
+        404
+      </h1>
+      <p className='font-body text-lg font-[420] text-shade-40 mb-12 text-center max-w-sm'>
+        This page doesn't exist or has been moved.
+      </p>
+      <Link
+        to='/'
+        className='border border-on-primary/40 text-on-primary px-8 py-3 rounded-pill font-body text-sm hover:border-on-primary transition-colors'
+      >
         Back to catalog
       </Link>
     </div>
