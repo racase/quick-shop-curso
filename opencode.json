@@ -1,0 +1,8 @@
+{
+  "command": {
+    "git-ship": {
+      "description": "Commit with Conventional Commits, push to remote, and optionally open a PR",
+      "template": "Revisa el estado actual del repositorio con `git status`, `git diff HEAD`, `git log --oneline -5` y `git branch --show-current`. Si no hay cambios, dímelo y para. Si hay cambios: (1) Analiza el diff y genera un mensaje de Conventional Commit con formato `<type>(<scope>): <subject>` más cuerpo opcional si el cambio es no trivial. Muéstrame el mensaje antes de commitear. (2) Haz `git add -A` y crea el commit con ese mensaje (no uses --no-verify). (3) Haz push al remoto (usa -u origin <rama> si no hay upstream). (4) Pregúntame si quiero abrir una Pull Request y, si digo que sí, pregunta a qué rama base y usa `gh pr create` para crearla. Devuélveme la URL de la PR si se crea."
+    }
+  }
+}
