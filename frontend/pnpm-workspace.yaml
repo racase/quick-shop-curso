@@ -1,0 +1,9 @@
+allowBuilds:
+  esbuild: true
+  '@tailwindcss/oxide': true
+  lightningcss: true
+
+onlyBuiltDependencies:
+  - esbuild
+  - '@tailwindcss/oxide'
+  - lightningcss
