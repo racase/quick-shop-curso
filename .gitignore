@@ -63,3 +63,8 @@ postgres-data/
 
 # Logs
 *.log
+*.stackdump
+
+# OpenCode local config
+opencode.json
+.opencode/
