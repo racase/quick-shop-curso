@@ -20,6 +20,11 @@ export function ProductManagementPage() {
   const [formError, setFormError] = useState('')
   const [formLoading, setFormLoading] = useState(false)
 
+  const [showAiPanel, setShowAiPanel] = useState(false)
+  const [aiPrompt, setAiPrompt] = useState('')
+  const [aiLoading, setAiLoading] = useState(false)
+  const [aiError, setAiError] = useState('')
+
   const load = () => {
     setLoading(true)
     productService.listAllProducts(page, 20, '', token)
@@ -33,6 +38,9 @@ export function ProductManagementPage() {
     setEditing(null)
     setForm(EMPTY_FORM)
     setFormError('')
+    setShowAiPanel(false)
+    setAiPrompt('')
+    setAiError('')
     setShowForm(true)
   }
 
@@ -46,6 +54,9 @@ export function ProductManagementPage() {
       image_url: product.image_url,
     })
     setFormError('')
+    setShowAiPanel(false)
+    setAiPrompt('')
+    setAiError('')
     setShowForm(true)
   }
 
@@ -53,6 +64,27 @@ export function ProductManagementPage() {
     if (!window.confirm('Deactivate this product?')) return
     await productService.deleteProduct(id, token)
     load()
+  }
+
+  const handleAiGenerate = async () => {
+    if (!aiPrompt.trim()) return
+    setAiError('')
+    setAiLoading(true)
+    try {
+      const fields = await productService.generateProductWithAI(aiPrompt.trim(), token)
+      setForm({
+        name: fields.name || '',
+        description: fields.description || '',
+        price: String(fields.price || ''),
+        stock: String(fields.stock || ''),
+        image_url: fields.image_url || '',
+      })
+      setShowAiPanel(false)
+    } catch (err) {
+      setAiError(err.message)
+    } finally {
+      setAiLoading(false)
+    }
   }
 
   const handleFormSubmit = async (e) => {
@@ -106,9 +138,67 @@ export function ProductManagementPage() {
           {/* Form panel */}
           {showForm && (
             <div className='mb-8 bg-canvas-light rounded-lg border border-hairline-light p-8 shadow-[0_8px_8px_rgba(0,0,0,0.06),0_4px_4px_rgba(0,0,0,0.06),0_2px_2px_rgba(0,0,0,0.06),0_0_0_1px_rgba(0,0,0,0.06)]'>
-              <h2 className='font-display text-[20px] font-[500] leading-[1.4] text-ink mb-6'>
-                {editing ? 'Edit product' : 'New product'}
-              </h2>
+              <div className='flex items-center justify-between gap-4 mb-6'>
+                <h2 className='font-display text-[20px] font-[500] leading-[1.4] text-ink'>
+                  {editing ? 'Edit product' : 'New product'}
+                </h2>
+                {!editing && (
+                  <button
+                    type='button'
+                    onClick={() => { setShowAiPanel((v) => !v); setAiError('') }}
+                    className='flex items-center gap-2 border border-hairline-light text-ink font-body text-sm font-[420] px-4 py-2 rounded-pill hover:border-shade-40 hover:bg-canvas-cream transition-colors'
+                  >
+                    <span>✦</span>
+                    <span>Crear producto con IA</span>
+                  </button>
+                )}
+              </div>
+
+              {/* AI prompt panel */}
+              {showAiPanel && !editing && (
+                <div className='mb-6 bg-pistachio-10 border border-hairline-light rounded-lg p-5'>
+                  <p className='font-body text-sm font-[500] text-shade-60 mb-3'>
+                    Describe el producto y la IA generará los campos automáticamente.
+                  </p>
+                  <textarea
+                    rows={3}
+                    placeholder='Ej: Auriculares inalámbricos gaming con cancelación de ruido activa y batería de 30 horas'
+                    value={aiPrompt}
+                    onChange={(e) => setAiPrompt(e.target.value)}
+                    className={inputClass + ' resize-none mb-3'}
+                  />
+                  {aiError && (
+                    <p className='font-body text-sm text-red-600 bg-red-50 px-3 py-2 rounded-md mb-3'>
+                      {aiError}
+                    </p>
+                  )}
+                  <div className='flex gap-3'>
+                    <button
+                      type='button'
+                      onClick={handleAiGenerate}
+                      disabled={aiLoading || !aiPrompt.trim()}
+                      className='bg-ink text-on-primary font-body text-sm font-[420] px-5 py-2.5 rounded-pill hover:bg-shade-70 disabled:opacity-50 transition-colors flex items-center gap-2'
+                    >
+                      {aiLoading ? (
+                        <>
+                          <span className='inline-block w-3.5 h-3.5 border-2 border-on-primary border-t-transparent rounded-full animate-spin' />
+                          Generando…
+                        </>
+                      ) : (
+                        'Generar'
+                      )}
+                    </button>
+                    <button
+                      type='button'
+                      onClick={() => { setShowAiPanel(false); setAiError('') }}
+                      className='border border-hairline-light text-ink font-body text-sm font-[420] px-5 py-2.5 rounded-pill hover:border-shade-40 transition-colors'
+                    >
+                      Cancelar
+                    </button>
+                  </div>
+                </div>
+              )}
+
               <form onSubmit={handleFormSubmit} className='grid grid-cols-1 md:grid-cols-2 gap-5'>
                 <div>
                   <label className={labelClass}>Name</label>

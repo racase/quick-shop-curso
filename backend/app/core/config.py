@@ -6,6 +6,8 @@ class Settings(BaseSettings):
     secret_key: str
     access_token_expire_minutes: int = 120
     cors_origins: str = "http://localhost:5173"
+    openrouter_api_key: str = ""
+    openrouter_model: str = "openai/gpt-4o-mini"
 
     @property
     def cors_origins_list(self) -> list[str]:

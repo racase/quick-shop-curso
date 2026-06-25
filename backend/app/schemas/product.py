@@ -72,3 +72,26 @@ class PaginatedProducts(BaseModel):
     total: int
     page: int
     size: int
+
+
+class AIGenerateRequest(BaseModel):
+    prompt: str
+
+    @field_validator("prompt")
+    @classmethod
+    def prompt_not_empty(cls, v: str) -> str:
+        if not v or not v.strip():
+            raise ValueError("prompt cannot be empty")
+        return v.strip()
+
+
+class AIGenerateResponse(BaseModel):
+    name: str
+    description: str
+    price: Decimal
+    stock: int
+    image_url: str
+
+    @field_serializer("price")
+    def serialize_price(self, v: Decimal) -> str:
+        return f"{v:.2f}"

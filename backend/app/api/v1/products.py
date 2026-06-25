@@ -1,12 +1,21 @@
 import uuid
 from typing import Optional
 
+import httpx
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.dependencies import get_db, require_admin
-from app.schemas.product import PaginatedProducts, ProductCreate, ProductResponse, ProductUpdate
+from app.schemas.product import (
+    AIGenerateRequest,
+    AIGenerateResponse,
+    PaginatedProducts,
+    ProductCreate,
+    ProductResponse,
+    ProductUpdate,
+)
 from app.services import product_service, review_service
+from app.services.ai_product_service import generate_product_fields
 
 router = APIRouter()
 
@@ -20,6 +29,24 @@ async def list_products(
 ):
     products, total = await product_service.list_active(db, page=page, size=size, search=search)
     return PaginatedProducts(items=products, total=total, page=page, size=size)
+
+
+@router.post("/products/ai-generate", response_model=AIGenerateResponse)
+async def ai_generate_product(
+    data: AIGenerateRequest,
+    admin=Depends(require_admin),
+):
+    try:
+        fields = await generate_product_fields(data.prompt)
+        return AIGenerateResponse(
+            name=fields["name"],
+            description=fields["description"],
+            price=f"{fields['price']:.2f}",
+            stock=fields["stock"],
+            image_url=fields["image_url"],
+        )
+    except (ValueError, httpx.HTTPError) as e:
+        raise HTTPException(status_code=502, detail=str(e))
 
 
 @router.get("/products/{product_id}", response_model=ProductResponse)

@@ -23,4 +23,7 @@ export const productService = {
     if (search) params.set('search', search)
     return apiFetch(`/admin/products?${params}`, {}, token)
   },
+
+  generateProductWithAI: (prompt, token) =>
+    apiFetch('/products/ai-generate', { method: 'POST', body: JSON.stringify({ prompt }) }, token),
 }
