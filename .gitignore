@@ -63,3 +63,13 @@ postgres-data/
 
 # Logs
 *.log
+
+
+# OpenCode local config
+opencode.json
+.opencode/
+
+# Playwright
+.playwright-mcp/
+frontend/test-results/
+frontend/playwright-report/
