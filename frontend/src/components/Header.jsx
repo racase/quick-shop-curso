@@ -5,56 +5,67 @@ export default function Header() {
   const { user, logout } = useAuth()
 
   return (
-    <header className="bg-indigo-600 text-white shadow-md">
-      <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-        <Link to="/" className="text-xl font-bold tracking-tight hover:text-indigo-200">
+    <header className="bg-canvas-night text-on-dark">
+      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-8">
+
+        <Link
+          to="/"
+          className="font-display text-on-dark text-xl shrink-0 hover:opacity-70 transition-opacity"
+          style={{ fontWeight: 330, letterSpacing: '0.02em' }}
+        >
           QuickShop
         </Link>
 
-        <nav className="flex items-center gap-4 text-sm">
-          <Link to="/" className="hover:text-indigo-200">
+        <nav className="flex items-center gap-6 flex-1">
+          <Link to="/" className="text-shade-40 hover:text-on-dark text-sm transition-colors">
             Catálogo
           </Link>
+          {user?.rol === 'cliente' && (
+            <Link to="/cart" className="text-shade-40 hover:text-on-dark text-sm transition-colors">
+              Carrito
+            </Link>
+          )}
+          {user?.rol === 'administrador' && (
+            <>
+              <Link to="/admin/products" className="text-shade-40 hover:text-on-dark text-sm transition-colors">
+                Productos
+              </Link>
+              <Link to="/admin/orders" className="text-shade-40 hover:text-on-dark text-sm transition-colors">
+                Pedidos
+              </Link>
+            </>
+          )}
+        </nav>
 
+        <div className="flex items-center gap-3 shrink-0">
           {user ? (
             <>
-              {user.rol === 'cliente' && (
-                <Link to="/cart" className="hover:text-indigo-200">
-                  Carrito
-                </Link>
-              )}
-              {user.rol === 'administrador' && (
-                <>
-                  <Link to="/admin/products" className="hover:text-indigo-200">
-                    Productos
-                  </Link>
-                  <Link to="/admin/orders" className="hover:text-indigo-200">
-                    Pedidos
-                  </Link>
-                </>
-              )}
-              <span className="text-indigo-200">{user.email}</span>
+              <span className="text-shade-40 text-sm hidden sm:block">{user.email}</span>
               <button
                 onClick={logout}
-                className="bg-white text-indigo-600 px-3 py-1 rounded hover:bg-indigo-50 font-medium"
+                className="rounded-pill border border-white/40 text-on-dark px-5 py-2 text-sm hover:border-white hover:bg-white hover:text-canvas-night transition-all"
               >
                 Salir
               </button>
             </>
           ) : (
             <>
-              <Link to="/login" className="hover:text-indigo-200">
+              <Link
+                to="/login"
+                className="text-shade-40 hover:text-on-dark text-sm transition-colors"
+              >
                 Iniciar sesión
               </Link>
               <Link
                 to="/register"
-                className="bg-white text-indigo-600 px-3 py-1 rounded hover:bg-indigo-50 font-medium"
+                className="rounded-pill border border-white/40 text-on-dark px-5 py-2 text-sm hover:border-white hover:bg-white hover:text-canvas-night transition-all"
               >
                 Registrarse
               </Link>
             </>
           )}
-        </nav>
+        </div>
+
       </div>
     </header>
   )

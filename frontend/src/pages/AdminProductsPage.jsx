@@ -86,59 +86,86 @@ export default function AdminProductsPage() {
     }
   }
 
-  if (loading) return <p className="text-center text-gray-500 mt-12">Cargando...</p>
+  if (loading) {
+    return (
+      <div className="max-w-7xl mx-auto px-6 py-16">
+        <p className="text-shade-50 text-sm text-center">Cargando...</p>
+      </div>
+    )
+  }
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Gestión de productos</h1>
+    <div className="max-w-7xl mx-auto px-6 py-10">
+
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <p className="font-body text-shade-50 uppercase text-xs tracking-[0.06em] mb-1">
+            Administración
+          </p>
+          <h1
+            className="font-display text-ink text-3xl leading-tight"
+            style={{ fontWeight: 500 }}
+          >
+            Gestión de productos
+          </h1>
+        </div>
         <button
           onClick={openCreate}
-          className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 text-sm font-medium"
+          className="rounded-pill bg-ink text-on-dark px-6 py-2.5 text-sm hover:bg-shade-70 transition-colors"
         >
           Nuevo producto
         </button>
       </div>
 
-      <div className="bg-white shadow rounded-lg overflow-x-auto">
+      <div
+        className="bg-canvas-light rounded-lg border border-hairline-light overflow-x-auto"
+        style={{ boxShadow: '0 8px 8px rgba(0,0,0,0.04), 0 4px 4px rgba(0,0,0,0.04), 0 2px 2px rgba(0,0,0,0.04), 0 0 0 1px rgba(0,0,0,0.06)' }}
+      >
         <table className="min-w-full text-sm">
-          <thead className="bg-gray-50 text-gray-600 uppercase text-xs">
-            <tr>
-              <th className="px-4 py-3 text-left">Nombre</th>
-              <th className="px-4 py-3 text-right">Precio</th>
-              <th className="px-4 py-3 text-right">Stock</th>
-              <th className="px-4 py-3 text-center">Estado</th>
-              <th className="px-4 py-3 text-center">Acciones</th>
+          <thead>
+            <tr className="border-b border-hairline-light">
+              <th className="px-5 py-3.5 text-left text-xs font-[500] text-shade-50 uppercase tracking-[0.04em]">Nombre</th>
+              <th className="px-5 py-3.5 text-right text-xs font-[500] text-shade-50 uppercase tracking-[0.04em]">Precio</th>
+              <th className="px-5 py-3.5 text-right text-xs font-[500] text-shade-50 uppercase tracking-[0.04em]">Stock</th>
+              <th className="px-5 py-3.5 text-center text-xs font-[500] text-shade-50 uppercase tracking-[0.04em]">Estado</th>
+              <th className="px-5 py-3.5 text-center text-xs font-[500] text-shade-50 uppercase tracking-[0.04em]">Acciones</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className="divide-y divide-hairline-light">
             {products.map((p) => (
-              <tr key={p.id} className="hover:bg-gray-50">
-                <td className="px-4 py-3 font-medium text-gray-800">{p.nombre}</td>
-                <td className="px-4 py-3 text-right text-gray-700">{Number(p.precio).toFixed(2)} €</td>
-                <td className="px-4 py-3 text-right text-gray-700">{p.stock}</td>
-                <td className="px-4 py-3 text-center">
-                  <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                    p.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'
-                  }`}>
+              <tr key={p.id} className="hover:bg-canvas-cream transition-colors">
+                <td className="px-5 py-3.5 font-[420] text-ink">{p.nombre}</td>
+                <td className="px-5 py-3.5 text-right text-shade-60">{Number(p.precio).toFixed(2)} €</td>
+                <td className="px-5 py-3.5 text-right text-shade-60">{p.stock}</td>
+                <td className="px-5 py-3.5 text-center">
+                  <span
+                    className={`inline-block rounded-pill px-3 py-0.5 text-xs font-[500] ${
+                      p.is_active
+                        ? 'bg-aloe text-ink'
+                        : 'bg-shade-30 text-shade-60'
+                    }`}
+                    style={{ letterSpacing: '0.04em' }}
+                  >
                     {p.is_active ? 'Activo' : 'Inactivo'}
                   </span>
                 </td>
-                <td className="px-4 py-3 text-center space-x-2">
-                  <button
-                    onClick={() => openEdit(p)}
-                    className="text-indigo-600 hover:underline text-xs font-medium"
-                  >
-                    Editar
-                  </button>
-                  {p.is_active && (
+                <td className="px-5 py-3.5 text-center">
+                  <div className="flex items-center justify-center gap-3">
                     <button
-                      onClick={() => handleDeactivate(p)}
-                      className="text-red-500 hover:underline text-xs font-medium"
+                      onClick={() => openEdit(p)}
+                      className="text-ink text-xs underline underline-offset-2 hover:text-shade-60 transition-colors"
                     >
-                      Desactivar
+                      Editar
                     </button>
-                  )}
+                    {p.is_active && (
+                      <button
+                        onClick={() => handleDeactivate(p)}
+                        className="text-shade-50 text-xs underline underline-offset-2 hover:text-ink transition-colors"
+                      >
+                        Desactivar
+                      </button>
+                    )}
+                  </div>
                 </td>
               </tr>
             ))}
@@ -147,17 +174,25 @@ export default function AdminProductsPage() {
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
-            <h2 className="text-lg font-bold text-gray-800 mb-4">
+        <div className="fixed inset-0 bg-canvas-night/50 flex items-center justify-center z-50 p-4">
+          <div
+            className="bg-canvas-light rounded-lg w-full max-w-md p-8"
+            style={{ boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)' }}
+          >
+            <h2
+              className="font-display text-ink text-2xl mb-6"
+              style={{ fontWeight: 500 }}
+            >
               {editing ? 'Editar producto' : 'Nuevo producto'}
             </h2>
+
             <form onSubmit={handleSave} className="space-y-4">
               {formError && (
-                <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">
+                <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-md px-3 py-2">
                   {formError}
                 </p>
               )}
+
               {[
                 { label: 'Nombre', key: 'nombre', type: 'text', required: true },
                 { label: 'Descripción', key: 'descripcion', type: 'text' },
@@ -166,27 +201,30 @@ export default function AdminProductsPage() {
                 { label: 'URL de imagen', key: 'imagen_url', type: 'url' },
               ].map(({ label, key, ...props }) => (
                 <div key={key}>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+                  <label className="block text-xs font-[500] text-shade-60 uppercase tracking-[0.04em] mb-1.5">
+                    {label}
+                  </label>
                   <input
                     {...props}
                     value={form[key]}
                     onChange={(e) => setForm((f) => ({ ...f, [key]: e.target.value }))}
-                    className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full border border-hairline-light rounded-md px-3 py-2.5 text-sm text-ink bg-canvas-light focus:outline-none focus:ring-2 focus:ring-ink/20 focus:border-ink transition-colors"
                   />
                 </div>
               ))}
+
               <div className="flex gap-3 pt-2">
                 <button
                   type="submit"
                   disabled={saving}
-                  className="flex-1 bg-indigo-600 text-white py-2 rounded font-medium hover:bg-indigo-700 disabled:opacity-50 text-sm"
+                  className="flex-1 rounded-pill bg-ink text-on-dark py-2.5 text-sm hover:bg-shade-70 disabled:opacity-50 transition-colors"
                 >
                   {saving ? 'Guardando...' : 'Guardar'}
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="flex-1 border border-gray-300 text-gray-700 py-2 rounded font-medium hover:bg-gray-50 text-sm"
+                  className="flex-1 rounded-pill border border-hairline-light text-shade-60 py-2.5 text-sm hover:border-ink hover:text-ink transition-colors"
                 >
                   Cancelar
                 </button>
@@ -195,6 +233,7 @@ export default function AdminProductsPage() {
           </div>
         </div>
       )}
+
     </div>
   )
 }
