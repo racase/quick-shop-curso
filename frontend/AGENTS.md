@@ -4,7 +4,7 @@
 
 - React 18
 - Vite
-- Tailwind CSS 3
+- Tailwind CSS v4 (configurado via `@theme {}` en `index.css`, sin `tailwind.config.js`)
 - React Router v6
 - pnpm 11 (requiere Node.js >= 22.13)
 - fetch nativo o axios para llamadas a la API
@@ -31,6 +31,62 @@ frontend/
 ├── .dockerignore
 └── Dockerfile
 ```
+
+## Sistema de diseño
+
+Todas las decisiones de UI/UX siguen las especificaciones de `@DESIGN.md`. Leer ese fichero antes de crear o modificar cualquier componente.
+
+### Dos pistas de diseño
+
+El sistema define dos pistas complementarias que **nunca deben mezclarse en el mismo band/seccion**:
+
+| Pista | Canvas | Tipografia | Botones | Uso en QuickShop |
+|-------|--------|-----------|---------|-----------------|
+| Cinematica (dark) | `canvas-night` #000000 | Neue Haas Grotesk Display, weight 330 | `button-outline-on-dark` (pill, borde blanco) | Header global, hero section del catalogo |
+| Transaccional (light) | `canvas-light` #fff / `canvas-cream` #fbfbf5 | Inter Variable | `button-primary-pill` (pill negro solido) | Auth, admin, product grid, carrito, pedidos |
+
+### Asignacion de pista por pagina
+
+| Pagina / Seccion | Pista |
+|-----------------|-------|
+| Header (global) | Cinematica |
+| CatalogPage — banda hero | Cinematica |
+| CatalogPage — grid de productos | Transaccional |
+| LoginPage | Transaccional (fondo canvas-cream) |
+| RegisterPage | Transaccional (fondo canvas-cream) |
+| AdminProductsPage | Transaccional |
+| CartPage | Transaccional |
+| OrdersPage / OrderDetailPage | Transaccional |
+| AdminOrdersPage | Transaccional |
+
+### Reglas criticas de UI
+
+- **Botones siempre pill** — usar `rounded-pill` en todos los botones. Nunca `rounded`, `rounded-lg`, ni `rounded-md` en botones.
+- **Display fonts a weight 330** — aplicar via `style={{ fontWeight: 330 }}` (Tailwind no tiene clase para ese valor). La clase `font-display` activa la familia (NHGD / fallback Helvetica).
+- **`font-feature-settings: "ss03"`** — aplicado globalmente en `index.css`. No repetir en componentes.
+- **Aloe (`bg-aloe`) y pistachio (`bg-pistachio`)** — solo en pista transaccional. Nunca en fondos oscuros.
+- **Elevaciones** — usar `style={{ boxShadow: ... }}` para los valores exactos del sistema:
+  - Level 3 (cards light): `0 8px 8px rgba(0,0,0,0.05), 0 4px 4px rgba(0,0,0,0.05), 0 2px 2px rgba(0,0,0,0.05), 0 0 0 1px rgba(0,0,0,0.06)`
+  - Level 4 (modales): `0 25px 50px -12px rgba(0,0,0,0.25)`
+
+### Tokens Tailwind disponibles (definidos en `src/index.css` via `@theme {}`)
+
+| Token DESIGN.md | Clase Tailwind generada |
+|-----------------|------------------------|
+| `colors.canvas-night` | `bg-canvas-night`, `text-canvas-night` |
+| `colors.canvas-light` | `bg-canvas-light` |
+| `colors.canvas-cream` | `bg-canvas-cream` |
+| `colors.ink` | `text-ink`, `bg-ink` |
+| `colors.on-dark` | `text-on-dark` |
+| `colors.aloe-10` | `bg-aloe`, `text-aloe` |
+| `colors.pistachio-10` | `bg-pistachio` |
+| `colors.hairline-light` | `border-hairline-light` |
+| `colors.shade-30..70` | `text-shade-40`, `bg-shade-30`, etc. |
+| `rounded.pill` | `rounded-pill` |
+| `rounded.lg` (12px) | `rounded-lg` |
+| `rounded.md` (8px) | `rounded-md` |
+| `typography.display-*` | `font-display` + `style={{ fontWeight: 330 }}` |
+| `typography.body-*` | `font-body` (aplicado por defecto en `body`) |
 
 ## Convenciones de frontend
 

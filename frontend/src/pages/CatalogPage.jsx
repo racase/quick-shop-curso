@@ -14,26 +14,49 @@ export default function CatalogPage() {
       .finally(() => setLoading(false))
   }, [])
 
-  if (loading) {
-    return <p className="text-center text-gray-500 mt-12">Cargando catálogo...</p>
-  }
-
-  if (error) {
-    return <p className="text-center text-red-500 mt-12">{error}</p>
-  }
-
   return (
-    <div>
-      <h1 className="text-2xl font-bold text-gray-800 mb-6">Catálogo</h1>
-      {products.length === 0 ? (
-        <p className="text-gray-500">No hay productos disponibles.</p>
-      ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-          {products.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
+    <>
+      {/* Banda cinematica (dark track) */}
+      <section className="bg-canvas-night text-on-dark px-6 py-20 md:py-28">
+        <div className="max-w-7xl mx-auto">
+          <p
+            className="font-body text-shade-40 uppercase text-xs tracking-[0.06em] mb-5"
+          >
+            Colección actual
+          </p>
+          <h1
+            className="font-display text-on-dark leading-none mb-6 text-[clamp(40px,7vw,70px)]"
+            style={{ fontWeight: 330 }}
+          >
+            Todo lo que<br />necesitas.
+          </h1>
+          <p className="font-body text-shade-40 text-base max-w-md leading-relaxed">
+            Productos seleccionados con la mejor calidad, entregados directamente a tu puerta.
+          </p>
         </div>
-      )}
-    </div>
+      </section>
+
+      {/* Banda transaccional (light track) — grid de productos */}
+      <section className="bg-canvas-light px-6 py-12">
+        <div className="max-w-7xl mx-auto">
+          {loading && (
+            <p className="text-shade-50 text-sm text-center py-16">Cargando catálogo...</p>
+          )}
+          {error && (
+            <p className="text-red-500 text-sm text-center py-16">{error}</p>
+          )}
+          {!loading && !error && products.length === 0 && (
+            <p className="text-shade-50 text-sm text-center py-16">No hay productos disponibles.</p>
+          )}
+          {!loading && !error && products.length > 0 && (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+              {products.map((p) => (
+                <ProductCard key={p.id} product={p} />
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+    </>
   )
 }

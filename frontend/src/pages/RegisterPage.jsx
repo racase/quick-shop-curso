@@ -49,53 +49,80 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="max-w-md mx-auto mt-16">
-      <h1 className="text-2xl font-bold text-gray-800 mb-6">Crear cuenta</h1>
-      <form onSubmit={handleSubmit} className="bg-white shadow rounded-lg p-8 space-y-5">
-        {error && (
-          <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">
-            {error}
+    <div className="min-h-[calc(100vh-64px)] bg-canvas-cream flex items-center justify-center px-4 py-16">
+      <div className="w-full max-w-md">
+
+        <div className="mb-8 text-center">
+          <p
+            className="font-body text-shade-50 uppercase text-xs tracking-[0.06em] mb-3"
+          >
+            Registro
           </p>
-        )}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-          <input
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
+          <h1
+            className="font-display text-ink text-[40px] leading-none"
+            style={{ fontWeight: 330 }}
+          >
+            Crea tu cuenta
+          </h1>
         </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
-          <input
-            type="password"
-            required
-            value={password}
-            onChange={handlePasswordChange}
-            className={`w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 ${
-              passwordError ? 'border-red-400 focus:ring-red-400' : 'border-gray-300 focus:ring-indigo-500'
-            }`}
-          />
-          {passwordError && (
-            <p className="text-xs text-red-600 mt-1">{passwordError}</p>
-          )}
-        </div>
-        <button
-          type="submit"
-          disabled={loading || !!passwordError}
-          className="w-full bg-indigo-600 text-white py-2 rounded font-medium hover:bg-indigo-700 disabled:opacity-50"
+
+        <form
+          onSubmit={handleSubmit}
+          className="bg-canvas-light rounded-lg p-8 space-y-5"
+          style={{ boxShadow: '0 25px 50px -12px rgba(0,0,0,0.12)' }}
         >
-          {loading ? 'Registrando...' : 'Registrarse'}
-        </button>
-        <p className="text-sm text-center text-gray-500">
-          ¿Ya tienes cuenta?{' '}
-          <Link to="/login" className="text-indigo-600 hover:underline">
-            Inicia sesión
-          </Link>
-        </p>
-      </form>
+          {error && (
+            <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-md px-3 py-2">
+              {error}
+            </p>
+          )}
+
+          <div>
+            <label className="block text-sm font-[500] text-shade-60 mb-1.5">Email</label>
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full border border-hairline-light rounded-md px-3 py-2.5 text-sm text-ink bg-canvas-light focus:outline-none focus:ring-2 focus:ring-ink/20 focus:border-ink transition-colors"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-[500] text-shade-60 mb-1.5">Contraseña</label>
+            <input
+              type="password"
+              required
+              value={password}
+              onChange={handlePasswordChange}
+              className={`w-full border rounded-md px-3 py-2.5 text-sm text-ink bg-canvas-light focus:outline-none focus:ring-2 transition-colors ${
+                passwordError
+                  ? 'border-red-400 focus:ring-red-200'
+                  : 'border-hairline-light focus:ring-ink/20 focus:border-ink'
+              }`}
+            />
+            {passwordError && (
+              <p className="text-xs text-red-600 mt-1.5">{passwordError}</p>
+            )}
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading || !!passwordError}
+            className="w-full rounded-pill bg-ink text-on-dark py-3 text-sm font-[420] hover:bg-shade-70 disabled:opacity-50 transition-colors"
+          >
+            {loading ? 'Registrando...' : 'Crear cuenta'}
+          </button>
+
+          <p className="text-sm text-center text-shade-50">
+            ¿Ya tienes cuenta?{' '}
+            <Link to="/login" className="text-ink underline underline-offset-2 hover:text-shade-60">
+              Inicia sesión
+            </Link>
+          </p>
+        </form>
+
+      </div>
     </div>
   )
 }
