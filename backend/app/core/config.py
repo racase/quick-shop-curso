@@ -8,6 +8,8 @@ class Settings(BaseSettings):
     SECRET_KEY: str
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 120
     CORS_ORIGINS: str = "http://localhost:5173"
+    OPENROUTER_API_KEY: str | None = None
+    OPENROUTER_MODEL: str = "GPT120 OSS"
 
     def get_cors_origins(self) -> list[str]:
         return [origin.strip() for origin in self.CORS_ORIGINS.split(",")]

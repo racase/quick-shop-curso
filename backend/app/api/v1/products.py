@@ -3,10 +3,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.dependencies import require_admin
 from app.db.session import get_db
-from app.schemas.product import ProductCreate, ProductListOut, ProductOut, ProductUpdate
+from app.schemas.product import AIGenerateRequest, AIGenerateResponse, ProductCreate, ProductListOut, ProductOut, ProductUpdate
 from app.services.product import (
     create_product,
     deactivate_product,
+    generate_product_with_ai,
     get_product,
     list_products,
     update_product,
@@ -26,6 +27,22 @@ async def get_product_detail(product_id: int, db: AsyncSession = Depends(get_db)
     if product is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Producto no encontrado")
     return product
+
+
+@router.post("/ai-generate", response_model=AIGenerateResponse)
+async def ai_generate_product(
+    payload: AIGenerateRequest,
+    _admin=Depends(require_admin),
+):
+    try:
+        return await generate_product_with_ai(payload.prompt)
+    except ValueError as exc:
+        detail = str(exc)
+        if "API key" in detail:
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=detail)
+        raise HTTPException(status_code=status.HTTP_502_BAD_GATEWAY, detail=detail)
+    except RuntimeError as exc:
+        raise HTTPException(status_code=status.HTTP_502_BAD_GATEWAY, detail=str(exc))
 
 
 @router.post("/", response_model=ProductOut, status_code=status.HTTP_201_CREATED)

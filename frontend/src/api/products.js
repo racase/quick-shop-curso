@@ -49,3 +49,16 @@ export async function deactivateProduct(token, id) {
   }
   return res.json()
 }
+
+export async function generateProductWithAI(token, prompt) {
+  const res = await fetch(`${API_URL}/api/v1/products/ai-generate`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ prompt }),
+  })
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    throw { status: res.status, detail: err.detail || 'Error al generar con IA' }
+  }
+  return res.json()
+}

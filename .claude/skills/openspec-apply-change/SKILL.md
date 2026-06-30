@@ -79,7 +79,10 @@ Implement tasks from an OpenSpec change.
    - Error or blocker encountered → report and wait for guidance
    - User interrupts
 
-7. **On completion or pause, show status**
+7. **Tras la implementación de las tareas, pregúntame si quiero lanzar el subagente code-reviewer de manera que, si el usuario contesta que sí, guardará un informe de revisión y si contesta que no, se saltará este paso**      
+   - Guardar un informe de la revisión del agente code-reviewer en la carpeta del cambio   <name>/review-report/agent-reviewer-report.md
+
+8. **On completion or pause, show status**
 
    Display:
    - Tasks completed this session

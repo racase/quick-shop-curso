@@ -1,8 +1,11 @@
+import { useContext } from 'react'
 import { Link } from 'react-router-dom'
+import { CartContext } from '../context/CartContext'
 import { useAuth } from '../hooks/useAuth'
 
 export default function Header() {
   const { user, logout } = useAuth()
+  const cartCtx = useContext(CartContext)
 
   return (
     <header className="bg-canvas-night text-on-dark">
@@ -21,8 +24,17 @@ export default function Header() {
             Catálogo
           </Link>
           {user?.rol === 'cliente' && (
-            <Link to="/cart" className="text-shade-40 hover:text-on-dark text-sm transition-colors">
+            <Link to="/cart" className="flex items-center gap-1.5 text-shade-40 hover:text-on-dark text-sm transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/>
+                <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
+              </svg>
               Carrito
+              {cartCtx && cartCtx.itemCount > 0 && (
+                <span className="bg-on-dark text-canvas-night text-[10px] font-[600] rounded-full w-4 h-4 flex items-center justify-center leading-none">
+                  {cartCtx.itemCount}
+                </span>
+              )}
             </Link>
           )}
           {user?.rol === 'administrador' && (
