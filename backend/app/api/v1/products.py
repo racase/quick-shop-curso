@@ -9,6 +9,7 @@ from app.services.product import (
     deactivate_product,
     generate_product_with_ai,
     get_product,
+    get_product_with_stats,
     list_products,
     update_product,
 )
@@ -23,10 +24,10 @@ async def get_products(skip: int = 0, limit: int = 100, db: AsyncSession = Depen
 
 @router.get("/{product_id}", response_model=ProductOut)
 async def get_product_detail(product_id: int, db: AsyncSession = Depends(get_db)):
-    product = await get_product(db, product_id)
-    if product is None:
+    product_data = await get_product_with_stats(db, product_id)
+    if product_data is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Producto no encontrado")
-    return product
+    return product_data
 
 
 @router.post("/ai-generate", response_model=AIGenerateResponse)

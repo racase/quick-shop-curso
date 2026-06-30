@@ -12,6 +12,50 @@ export async function getProduct(id) {
   return res.json()
 }
 
+export async function getProductReviews(productId, skip = 0, limit = 50) {
+  const res = await fetch(`${API_URL}/api/v1/products/${productId}/reviews/?skip=${skip}&limit=${limit}`)
+  if (!res.ok) throw new Error('Error al cargar valoraciones')
+  return res.json()
+}
+
+export async function createReview(token, productId, data) {
+  const res = await fetch(`${API_URL}/api/v1/products/${productId}/reviews/`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify(data),
+  })
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    throw { status: res.status, detail: err.detail || 'Error al crear valoración' }
+  }
+  return res.json()
+}
+
+export async function updateReview(token, productId, data) {
+  const res = await fetch(`${API_URL}/api/v1/products/${productId}/reviews/`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify(data),
+  })
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    throw { status: res.status, detail: err.detail || 'Error al actualizar valoración' }
+  }
+  return res.json()
+}
+
+export async function deleteReview(token, productId) {
+  const res = await fetch(`${API_URL}/api/v1/products/${productId}/reviews/`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    throw { status: res.status, detail: err.detail || 'Error al eliminar valoración' }
+  }
+  return res.json()
+}
+
 export async function createProduct(token, data) {
   const res = await fetch(`${API_URL}/api/v1/products/`, {
     method: 'POST',

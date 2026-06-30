@@ -1,3 +1,6 @@
+import { Link } from 'react-router-dom'
+import StarRating from './StarRating'
+
 export default function ProductCard({ product, onAddToCart }) {
   const outOfStock = product.stock === 0
 
@@ -6,27 +9,36 @@ export default function ProductCard({ product, onAddToCart }) {
       className="bg-canvas-light rounded-lg border border-hairline-light overflow-hidden flex flex-col"
       style={{ boxShadow: '0 8px 8px rgba(0,0,0,0.05), 0 4px 4px rgba(0,0,0,0.05), 0 2px 2px rgba(0,0,0,0.05), 0 0 0 1px rgba(0,0,0,0.06)' }}
     >
-      <div className="aspect-[4/3] overflow-hidden bg-shade-30/20">
+      <Link to={`/products/${product.id}`} className="aspect-[4/3] overflow-hidden bg-shade-30/20 block">
         <img
           src={product.imagen_url || 'https://placehold.co/400x300?text=Sin+imagen'}
           alt={product.nombre}
           className="w-full h-full object-cover"
         />
-      </div>
+      </Link>
 
       <div className="p-4 flex flex-col flex-1 gap-3">
         <div className="flex-1">
-          <h3
-            className="font-display text-ink text-base leading-tight line-clamp-2 mb-1"
-            style={{ fontWeight: 500 }}
-          >
-            {product.nombre}
-          </h3>
+          <Link to={`/products/${product.id}`}>
+            <h3
+              className="font-display text-ink text-base leading-tight line-clamp-2 mb-1 hover:underline"
+              style={{ fontWeight: 500 }}
+            >
+              {product.nombre}
+            </h3>
+          </Link>
           {product.descripcion && (
             <p className="text-shade-50 text-sm leading-snug line-clamp-2">
               {product.descripcion}
             </p>
           )}
+          <div className="mt-2">
+            <StarRating
+              rating={product.media_puntuacion || 0}
+              totalReviews={product.total_valoraciones || 0}
+              size="sm"
+            />
+          </div>
         </div>
 
         <div className="flex items-center justify-between gap-2">

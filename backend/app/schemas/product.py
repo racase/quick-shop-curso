@@ -29,6 +29,8 @@ class ProductListOut(BaseModel):
     stock: int
     imagen_url: str | None
     is_active: bool
+    media_puntuacion: Decimal = Decimal("0.0")
+    total_valoraciones: int = 0
 
     model_config = {"from_attributes": True}
 

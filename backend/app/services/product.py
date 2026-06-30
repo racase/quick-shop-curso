@@ -1,11 +1,12 @@
 import json
 
 import httpx
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
 from app.models.product import Product
+from app.models.review import Review
 from app.schemas.product import AIGenerateResponse, ProductCreate, ProductUpdate
 
 _AI_SYSTEM_PROMPT = (
@@ -19,16 +20,69 @@ _AI_SYSTEM_PROMPT = (
 )
 
 
-async def list_products(db: AsyncSession, skip: int = 0, limit: int = 100) -> list[Product]:
+async def _get_product_rating_stats(db: AsyncSession, product_id: int) -> tuple:
+    result = await db.execute(
+        select(
+            func.coalesce(func.avg(Review.puntuacion), 0).label("media"),
+            func.coalesce(func.count(Review.id), 0).label("total"),
+        ).where(Review.producto_id == product_id)
+    )
+    stats = result.one()
+    from decimal import Decimal
+    media_puntuacion = Decimal(str(stats.media)).quantize(Decimal("0.1")) if stats.media else Decimal("0.0")
+    total_valoraciones = stats.total or 0
+    return media_puntuacion, total_valoraciones
+
+
+async def list_products(db: AsyncSession, skip: int = 0, limit: int = 100) -> list:
     result = await db.execute(
         select(Product).where(Product.is_active == True).offset(skip).limit(limit)
     )
-    return list(result.scalars().all())
+    products = list(result.scalars().all())
+    
+    products_with_stats = []
+    for product in products:
+        media_puntuacion, total_valoraciones = await _get_product_rating_stats(db, product.id)
+        product_dict = {
+            "id": product.id,
+            "nombre": product.nombre,
+            "descripcion": product.descripcion,
+            "precio": product.precio,
+            "stock": product.stock,
+            "imagen_url": product.imagen_url,
+            "is_active": product.is_active,
+            "media_puntuacion": media_puntuacion,
+            "total_valoraciones": total_valoraciones,
+        }
+        products_with_stats.append(product_dict)
+    
+    return products_with_stats
 
 
 async def get_product(db: AsyncSession, product_id: int) -> Product | None:
     result = await db.execute(select(Product).where(Product.id == product_id))
     return result.scalar_one_or_none()
+
+
+async def get_product_with_stats(db: AsyncSession, product_id: int) -> dict | None:
+    product = await get_product(db, product_id)
+    if product is None:
+        return None
+    
+    media_puntuacion, total_valoraciones = await _get_product_rating_stats(db, product_id)
+    return {
+        "id": product.id,
+        "nombre": product.nombre,
+        "descripcion": product.descripcion,
+        "precio": product.precio,
+        "stock": product.stock,
+        "imagen_url": product.imagen_url,
+        "is_active": product.is_active,
+        "created_at": product.created_at,
+        "updated_at": product.updated_at,
+        "media_puntuacion": media_puntuacion,
+        "total_valoraciones": total_valoraciones,
+    }
 
 
 async def create_product(db: AsyncSession, data: ProductCreate) -> Product:
