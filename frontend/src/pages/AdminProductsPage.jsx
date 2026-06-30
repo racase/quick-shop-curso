@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getProducts, createProduct, updateProduct, deactivateProduct } from '../api/products'
+import { getProducts, createProduct, updateProduct, deactivateProduct, generateProductWithAI } from '../api/products'
 import { useAuth } from '../hooks/useAuth'
 
 const EMPTY_FORM = { nombre: '', descripcion: '', precio: '', stock: 0, imagen_url: '' }
@@ -13,6 +13,9 @@ export default function AdminProductsPage() {
   const [form, setForm] = useState(EMPTY_FORM)
   const [formError, setFormError] = useState('')
   const [saving, setSaving] = useState(false)
+  const [showAIPanel, setShowAIPanel] = useState(false)
+  const [aiPrompt, setAiPrompt] = useState('')
+  const [generating, setGenerating] = useState(false)
 
   async function loadProducts() {
     try {
@@ -34,7 +37,29 @@ export default function AdminProductsPage() {
     setEditing(null)
     setForm(EMPTY_FORM)
     setFormError('')
+    setShowAIPanel(false)
+    setAiPrompt('')
     setShowModal(true)
+  }
+
+  async function handleGenerate() {
+    if (!aiPrompt.trim()) return
+    setFormError('')
+    setGenerating(true)
+    try {
+      const data = await generateProductWithAI(token, aiPrompt)
+      setForm((f) => ({
+        ...f,
+        nombre: data.nombre ?? f.nombre,
+        descripcion: data.descripcion ?? f.descripcion,
+        precio: data.precio != null ? String(data.precio) : f.precio,
+        stock: data.stock != null ? data.stock : f.stock,
+      }))
+    } catch (err) {
+      setFormError(err.detail || 'Error al generar con IA')
+    } finally {
+      setGenerating(false)
+    }
   }
 
   function openEdit(product) {
@@ -185,6 +210,47 @@ export default function AdminProductsPage() {
             >
               {editing ? 'Editar producto' : 'Nuevo producto'}
             </h2>
+
+            {!editing && (
+              <div className="mb-5">
+                {!showAIPanel ? (
+                  <button
+                    type="button"
+                    onClick={() => setShowAIPanel(true)}
+                    className="w-full rounded-pill border border-ink text-ink px-4 py-2 text-sm hover:bg-ink hover:text-on-dark transition-colors"
+                  >
+                    Crear con IA
+                  </button>
+                ) : (
+                  <div className="space-y-2">
+                    <textarea
+                      value={aiPrompt}
+                      onChange={(e) => setAiPrompt(e.target.value)}
+                      placeholder="Describe el producto (ej. zapatilla deportiva de running unisex, gama media)"
+                      rows={2}
+                      className="w-full border border-hairline-light rounded-md px-3 py-2.5 text-sm text-ink bg-canvas-light focus:outline-none focus:ring-2 focus:ring-ink/20 focus:border-ink transition-colors resize-none"
+                    />
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        onClick={handleGenerate}
+                        disabled={generating || !aiPrompt.trim()}
+                        className="rounded-pill border border-ink text-ink px-4 py-2 text-sm hover:bg-ink hover:text-on-dark disabled:opacity-50 transition-colors"
+                      >
+                        {generating ? 'Generando...' : 'Generar'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setShowAIPanel(false)}
+                        className="rounded-pill border border-hairline-light text-shade-50 px-4 py-2 text-sm hover:border-ink hover:text-ink transition-colors"
+                      >
+                        Cancelar
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
 
             <form onSubmit={handleSave} className="space-y-4">
               {formError && (

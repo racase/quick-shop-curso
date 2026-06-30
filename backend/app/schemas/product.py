@@ -1,7 +1,7 @@
 from datetime import datetime
 from decimal import Decimal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 
 class ProductCreate(BaseModel):
@@ -36,3 +36,29 @@ class ProductListOut(BaseModel):
 class ProductOut(ProductListOut):
     created_at: datetime
     updated_at: datetime
+
+
+class AIGenerateRequest(BaseModel):
+    prompt: str = Field(min_length=1)
+
+
+class AIGenerateResponse(BaseModel):
+    nombre: str
+    descripcion: str | None = None
+    precio: float
+    stock: int
+    imagen_url: str | None = None
+
+    @field_validator("precio")
+    @classmethod
+    def precio_must_be_positive(cls, v: float) -> float:
+        if v <= 0:
+            raise ValueError("precio debe ser mayor que 0")
+        return round(v, 2)
+
+    @field_validator("stock")
+    @classmethod
+    def stock_must_be_non_negative(cls, v: int) -> int:
+        if v < 0:
+            raise ValueError("stock debe ser mayor o igual a 0")
+        return v
