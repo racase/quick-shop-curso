@@ -1,11 +1,15 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { getProducts } from '../api/products'
 import ProductCard from '../components/ProductCard'
+import { CartContext } from '../context/CartContext'
+import { useAuth } from '../hooks/useAuth'
 
 export default function CatalogPage() {
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const { user } = useAuth()
+  const cartCtx = useContext(CartContext)
 
   useEffect(() => {
     getProducts()
@@ -13,6 +17,15 @@ export default function CatalogPage() {
       .catch(() => setError('No se pudo cargar el catálogo'))
       .finally(() => setLoading(false))
   }, [])
+
+  async function handleAddToCart(product) {
+    if (!cartCtx) return
+    try {
+      await cartCtx.addToCart(product.id, 1)
+    } catch (e) {
+      alert(e.detail || 'No se pudo agregar al carrito')
+    }
+  }
 
   return (
     <>
@@ -51,7 +64,11 @@ export default function CatalogPage() {
           {!loading && !error && products.length > 0 && (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
               {products.map((p) => (
-                <ProductCard key={p.id} product={p} />
+                <ProductCard
+                  key={p.id}
+                  product={p}
+                  onAddToCart={user?.rol === 'cliente' ? handleAddToCart : undefined}
+                />
               ))}
             </div>
           )}
