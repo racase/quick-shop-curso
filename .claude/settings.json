@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "command": "$j = [Console]::In.ReadToEnd() | ConvertFrom-Json; $fp = [string]$j.tool_input.file_path; if ($fp -and [System.IO.Path]::GetFileName($fp) -match '\\.env$') { Write-Output '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"permissionDecision\":\"deny\",\"permissionDecisionReason\":\"Lectura de ficheros .env bloqueada por politica de seguridad\"}}'; }",
+            "shell": "powershell",
+            "statusMessage": "Verificando acceso a fichero...",
+            "type": "command"
+          }
+        ],
+        "matcher": "Read"
+      }
+    ]
+  }
+}
